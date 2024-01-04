@@ -1,6 +1,7 @@
 package dunsinane
 
 import (
+	"math"
 	"strings"
 	"unicode"
 )
@@ -44,6 +45,10 @@ func tokenize(document string) []Token {
 }
 
 const EPSILON Position = 0.5
+
+func Infinity() Position {
+	return float32(math.Inf(+1))
+}
 
 func index(tokens []Token) Index {
 	index := Index{}

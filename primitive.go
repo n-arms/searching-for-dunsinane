@@ -9,7 +9,12 @@ func emptyExtent() Extent {
 	}
 }
 
-// TODO: reimplement list queries using binary search
+func negEmptyExtent() Extent {
+	return Extent{
+		start: float32(math.Inf(-1)),
+		end:   float32(math.Inf(-1)),
+	}
+}
 
 func (l GCList) accessT(k Position) Extent {
 	for _, extent := range l.extents {
@@ -37,7 +42,7 @@ func (l GCList) accessTPrime(k Position) Extent {
 			return extent
 		}
 	}
-	return emptyExtent()
+	return negEmptyExtent()
 }
 
 func (l GCList) accessPPrime(k Position) Extent {
@@ -48,7 +53,7 @@ func (l GCList) accessPPrime(k Position) Extent {
 			return extent
 		}
 	}
-	return emptyExtent()
+	return negEmptyExtent()
 }
 
 // All extents of the given length
