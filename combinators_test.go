@@ -3,6 +3,7 @@ package dunsinane
 import (
 	"fmt"
 	"math"
+	"reflect"
 	"testing"
 )
 
@@ -18,6 +19,8 @@ func TestOrder(t *testing.T) {
 	CheckEqual(t, query.accessT(1), Extent{start: 4.5, end: 5.5})
 	CheckEqual(t, query.accessTPrime(1000), Extent{start: 4.5, end: 5.5})
 	CheckEqual(t, query.accessP(0), Extent{start: 0.5, end: 1.5})
+	CheckEqual(t, query.accessP(6).isReal(), false)
+	CheckEqual(t, query.accessTPrime(0).isReal(), false)
 }
 
 func TestContains(t *testing.T) {
@@ -34,13 +37,45 @@ func TestContains(t *testing.T) {
 	}
 
 	CheckEqual(t, query.accessP(0), Extent{start: 4.5, end: 5.5})
+	CheckEqual(t, query.accessPPrime(4).isReal(), false)
 }
 
-func drive(query Query, index Index) {
-	k := float32(math.Inf(-1))
-	for k != float32(math.Inf(1)) {
+func drive(query Query) {
+	k := NegInfinity()
+
+	for {
 		e := query.accessT(k)
-		fmt.Println(e)
-		k = e.end
+		if e.isReal() {
+			k = e.end
+			fmt.Println(e)
+		} else {
+			fmt.Printf("Finished with invalid extent %v\n", e)
+			break
+		}
+	}
+}
+
+func drivePPrime(query Query) {
+	k := Infinity()
+	var prev *Extent = nil
+
+	for {
+		e := query.accessPPrime(k)
+		if e.isReal() {
+			if prev != nil && reflect.DeepEqual(*prev, e) {
+				k -= EPSILON
+				continue
+			} else {
+				fmt.Println(e)
+				prev = new(Extent)
+				*prev = e
+				if math.IsInf(float64(k), 0) {
+					k = e.start - EPSILON
+				}
+			}
+		} else {
+			fmt.Printf("Finished with invalid extent %v\n", e)
+			break
+		}
 	}
 }

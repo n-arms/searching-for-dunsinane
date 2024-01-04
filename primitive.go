@@ -1,18 +1,16 @@
 package dunsinane
 
-import "math"
-
 func emptyExtent() Extent {
 	return Extent{
-		start: float32(math.Inf(+1)),
-		end:   float32(math.Inf(+1)),
+		start: Infinity(),
+		end:   Infinity(),
 	}
 }
 
 func negEmptyExtent() Extent {
 	return Extent{
-		start: float32(math.Inf(-1)),
-		end:   float32(math.Inf(-1)),
+		start: NegInfinity(),
+		end:   NegInfinity(),
 	}
 }
 

@@ -14,13 +14,9 @@ func (o Order) accessT(k Position) Extent {
 	// find the closest extent in A that comes before ePrime
 	eDoublePrime := o.first.accessTPrime(ePrime.start - EPSILON)
 
-	if eDoublePrime.start == Infinity() || ePrime.end == Infinity() {
-		return emptyExtent()
-	} else {
-		return Extent{
-			start: eDoublePrime.start,
-			end:   ePrime.end,
-		}
+	return Extent{
+		start: eDoublePrime.start,
+		end:   ePrime.end,
 	}
 }
 

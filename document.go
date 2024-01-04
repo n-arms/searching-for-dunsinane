@@ -20,6 +20,10 @@ type Extent struct {
 	end   Position
 }
 
+func (e Extent) isReal() bool {
+	return !(math.IsInf(float64(e.start), 0) || math.IsInf(float64(e.end), 0))
+}
+
 func isMarkup(token Token) bool {
 	return strings.HasPrefix(token, "[") || strings.HasSuffix(token, "]")
 }
@@ -48,6 +52,10 @@ const EPSILON Position = 0.5
 
 func Infinity() Position {
 	return float32(math.Inf(+1))
+}
+
+func NegInfinity() Position {
+	return float32(math.Inf(-1))
 }
 
 func index(tokens []Token) Index {
