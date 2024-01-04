@@ -50,3 +50,30 @@ func (l GCList) accessPPrime(k Position) Extent {
 	}
 	return emptyExtent()
 }
+
+// All extents of the given length
+type Sigma struct {
+	length Position
+}
+
+func (s Sigma) accessT(k Position) Extent {
+	return Extent{
+		start: k,
+		end:   k + s.length - EPSILON,
+	}
+}
+
+func (s Sigma) accessP(k Position) Extent {
+	return Extent{
+		start: k - s.length + EPSILON,
+		end:   k,
+	}
+}
+
+func (s Sigma) accessTPrime(k Position) Extent {
+	return s.accessT(k)
+}
+
+func (s Sigma) accessPPrime(k Position) Extent {
+	return s.accessP(k)
+}
