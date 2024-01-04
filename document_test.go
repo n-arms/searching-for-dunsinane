@@ -5,10 +5,14 @@ import (
 	"testing"
 )
 
-func TestTextProcessing(t *testing.T) {
+func ExampleIndex() Index {
 	text := "[line The [bold quick bold] brown fox line] [line jumped [bold over bold] the lazy dog. line]"
 	index := ProcessDocument(text)
+	return index
+}
 
+func TestTextProcessing(t *testing.T) {
+	index := ExampleIndex()
 	checkIndex(t, index, "dog", []Extent{
 		{start: 8, end: 8},
 	})
