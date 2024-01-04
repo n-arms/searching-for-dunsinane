@@ -28,7 +28,7 @@ func tokenize(document string) []Token {
 	current := strings.Builder{}
 
 	for _, char := range document {
-		if unicode.IsPunct(char) {
+		if unicode.IsPunct(char) && !(char == '[' || char == ']') {
 			continue
 		} else if unicode.IsSpace(char) {
 			tokens = append(tokens, current.String())
@@ -56,6 +56,7 @@ func index(tokens []Token) Index {
 			documentIndex = nextIndex - EPSILON
 		} else {
 			documentIndex = nextIndex
+			nextIndex += 1
 		}
 		extent := Extent{
 			start: documentIndex,
