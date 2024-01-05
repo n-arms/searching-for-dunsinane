@@ -28,7 +28,7 @@ func isMarkup(token Token) bool {
 	return strings.HasPrefix(token, "[") || strings.HasSuffix(token, "]")
 }
 
-func tokenize(document string) []Token {
+func TokenizePaperFormat(document string) []Token {
 	tokens := []Token{}
 	current := strings.Builder{}
 
@@ -48,6 +48,50 @@ func tokenize(document string) []Token {
 	return tokens
 }
 
+func TokenizeHtml(document string) []Token {
+	tokens := []Token{}
+	current := strings.Builder{}
+	isMarkup := false
+
+	for _, char := range document {
+		if !isMarkup {
+			if char == '<' {
+				isMarkup = true
+				if current.Len() != 0 {
+					tokens = append(tokens, current.String())
+					current = strings.Builder{}
+				}
+			} else if unicode.IsPunct(char) {
+				continue
+			} else if unicode.IsSpace(char) {
+				if current.Len() != 0 {
+					tokens = append(tokens, current.String())
+					current = strings.Builder{}
+				}
+
+				if char == '\n' {
+					tokens = append(tokens, "\n")
+				}
+			} else {
+				current.WriteRune(char)
+			}
+		}
+		if isMarkup {
+			current.WriteRune(char)
+			if char == '>' {
+				isMarkup = false
+				tokens = append(tokens, current.String())
+				current = strings.Builder{}
+			}
+		}
+
+	}
+	if current.Len() > 0 {
+		tokens = append(tokens, current.String())
+	}
+	return tokens
+}
+
 const EPSILON Position = 0.5
 
 func Infinity() Position {
@@ -58,7 +102,7 @@ func NegInfinity() Position {
 	return float32(math.Inf(-1))
 }
 
-func index(tokens []Token) Index {
+func MakeIndex(tokens []Token) Index {
 	index := Index{}
 
 	nextIndex := float32(0)
@@ -90,5 +134,5 @@ func index(tokens []Token) Index {
 }
 
 func ProcessDocument(document string) Index {
-	return index(tokenize(document))
+	return MakeIndex(TokenizePaperFormat(document))
 }
