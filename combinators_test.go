@@ -56,6 +56,21 @@ func TestContainedIn(t *testing.T) {
 	CheckEqual(t, query.accessP(0), Extent{start: 5, end: 5})
 	CheckEqual(t, query.accessTPrime(6), Extent{start: 5, end: 5})
 	CheckEqual(t, query.accessPPrime(4).isReal(), false)
+
+	line := Order{
+		first:  index["[line"],
+		second: index["line]"],
+	}
+	brownFox := Order{
+		first:  index["brown"],
+		second: index["fox"],
+	}
+	q := ContainedIn{
+		first:  brownFox,
+		second: line,
+	}
+
+	CheckEqual(t, q.accessT(-1), Extent{start: 2, end: 3})
 }
 
 func TestBothOf(t *testing.T) {
