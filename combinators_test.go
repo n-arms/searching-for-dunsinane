@@ -40,6 +40,36 @@ func TestContains(t *testing.T) {
 	CheckEqual(t, query.accessPPrime(4).isReal(), false)
 }
 
+func TestContainedIn(t *testing.T) {
+	index := ExampleIndex()
+
+	var bold Query = Order{
+		first:  index["[bold"],
+		second: index["bold]"],
+	}
+
+	var query Query = ContainedIn{
+		first:  index["over"],
+		second: bold,
+	}
+
+	CheckEqual(t, query.accessP(0), Extent{start: 5, end: 5})
+	CheckEqual(t, query.accessTPrime(6), Extent{start: 5, end: 5})
+	CheckEqual(t, query.accessPPrime(4).isReal(), false)
+}
+
+func TestBothOf(t *testing.T) {
+	index := ExampleIndex()
+
+	var query Query = BothOf{
+		first:  index["quick"],
+		second: index["brown"],
+	}
+
+	CheckEqual(t, query.accessT(0), Extent{start: 1, end: 2})
+	CheckEqual(t, query.accessPPrime(3), Extent{start: 1, end: 2})
+}
+
 func drive(query Query) {
 	k := NegInfinity()
 
